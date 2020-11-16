@@ -26,7 +26,7 @@ leaved 를 true로 변경하고 탈퇴시각(=leavedAt)을 현재 시간으로 �
 Controller단을 통해서 회원가입 정보(UserSaveRequestDto)를 받아오고 Service단의 join 메소드로 전달하게 됩니다. 
 (Service단의)join 메소드가 처음 실행되면 validateUserName()을 통해서 userName이 유효한지를 판단하고, 
 이 유효성을 판단하는 메소드는 userName이 DB의 User table에 이미 존재하는 경우에 2가지 유효성을 검증합니다. 
-(1). isLeaved가 false인 경우는 중복되는 유저가 존재하는 것이므로 예외를 던진다. 
+(1) isLeaved가 false인 경우는 중복되는 유저가 존재하는 것이므로 예외를 던진다. 
 (2) isLeaved가 true인 경우 탈퇴일 이후 30일이 지났는지 확인하여 지나지 않았다면 예외를 던진다. 
 
 조금 우려스러운 부분은 회원 탈퇴시에 남아있는 User 정보를 다시 업데이트하는 방식으로 회원가입을 
@@ -51,7 +51,7 @@ stream을 통해서 sort() 하였고, 람다식으로 Comparator를 구현하여
 위치좌표(=Position) (latitude, longitude)를 받아오고, 이 값을 기준으로 모든 DB내의 박물관과 거리를 계산하고 
 그 값이 작은 순서대로 오름차순 정렬합니다. 
 
-(1) SQL Query: JPA Hibernate에서 기본적으로 제공하는 findAll 기능을 사용 
-Native Query: select * from Museum; 으로 추정  
+(1) SQL Query: JPA Hibernate에서 기본적으로 제공하는 findAll 기능을 사용 하였기 때문에 
+실제 Native Query는 select * from museum; 입니다.     
 (2) Java SpringBoot 메소드: Service단의 'findAllMuseumOrderByDistance()' 기능, Controller단의 
 ```
