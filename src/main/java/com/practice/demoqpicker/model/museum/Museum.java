@@ -19,8 +19,8 @@ public class Museum {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private Double latitude; // 위도
-    private Double longitude; // 경도
+    private Double latitude;
+    private Double longitude;
 
     @Builder
     public Museum(String name, Double latitude, Double longitude) {
