@@ -24,18 +24,18 @@ public class UserService {
         validateUserName(requestDto); //todo: 여기서 더 확장하면! 원하는 기능별로 예외처리를 분리할 수 있지 않을까?
         User user = createUser(requestDto);
 
-        /*
-        if (user.getCountryIsoCode() != null) { // (기존코드)해당 코드는 countryIsoCode가 어떤 부분에서 초기화 되었는지 알 수X
+        /* (기존코드) 해당 코드는 countryIsoCode가 어떤 부분에서 초기화 되었는지 알 수X
+        if (user.getCountryIsoCode() != null) {
             user.setLastAccessedCountry(countryRepository.findByIsoCode(user.getCountryIsoCode()));
         }
         */
 
         User savedUser = userRepository.save(user);
 
-        /* (기존 코드)
+        /* (기존 코드) 구독관련 (메일이나 알림서비스를 위한..) 서비스인 것으로 추정 관련 정보X
         if (user.getEmail() != null) {
             stibeeService.addSubscriber(savedUser.getEmail(), savedUser.getId());
-        } // 구독관련 (메일이나 알림서비스를 위한..) 서비스인 것으로 추정 관련 정보X
+        }
 
         String authToken = tokenHandler.createTokenForUser(savedUser.getUid()); // User의 token 관련 정보X
         savedUser.setToken(authToken);
@@ -71,7 +71,7 @@ public class UserService {
                 .thirdPartyAccessToken(requestDto.getThirdPartyAccessToken())
                 .build();
 
-        if (requestDto.getCellphone() != null) { // 인증된 폰 번호 대입
+        if (requestDto.getCellphone() != null) {
             user.setCellphone(requestDto.getCellphone());
             user.setCellPhoneVerified(true);
         }
@@ -113,7 +113,7 @@ public class UserService {
     }
 
     private void validateUserName(UserSaveRequestDto requestDto) { // todo:  (+ Controller에서 try catch문으로 예외처리해주기!)
-        List<User> findUsers = userRepository.findAllByUserName(requestDto.getUserName());
+        List<User> findUsers = userRepository.findAllByUserNameOrderByLeavedAtDesc(requestDto.getUserName());
 
         if (!findUsers.isEmpty()) {
             User findUser = findUsers.get(0);
@@ -137,90 +137,4 @@ public class UserService {
             throw new IllegalArgumentException("동일한 사용자 이름이 존재합니다.");
         }
     }
-
-    //    @Transactional
-    //    public void deleteUser() {
-    //        //         탈퇴 로직
-    //        if (!isLoggedIn()) {
-    //            return CommonResponse.failWithMessage("로그인이 필요한 서비스입니다.");
-    //        }
-    //
-    //        //         기존 탈퇴 로직
-    //        User user = userRepository.getOne(getSessionUserId());
-    //
-    //        try {
-    //            if (user != null) {
-    //                String authType = user.getAuthType().name();
-    //                switch (authType.toLowerCase()) {
-    //                    case "kakao":
-    //                        HttpHeaders headers = new HttpHeaders();
-    //                        headers.setContentType(MediaType.APPLICATION_JSON);
-    //                        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    //                        headers.set("Authorization", "KakaoAK " + kakaoRestKey);
-    //
-    //                        HttpEntity<Map<String, Object>> request = new HttpEntity<>(null, headers);
-    //                        String url = "https://kapi.kakao.com/v1/user/unlink?target_id_type=user_id&target_id=" + user.getThirdPartyUserId();
-    //
-    //                        RestTemplate restTemplate = new RestTemplateBuilder().build();
-    //                        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request,
-    //                                String.class);
-    //                        break;
-    //                    case "facebook":
-    //                        headers = new HttpHeaders();
-    //                        headers.setContentType(MediaType.APPLICATION_JSON);
-    //                        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    //
-    //                        request = new HttpEntity<>(null, headers);
-    //                        String getTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id=" + facebookAppId + "&client_secret=" + facebookAppSecret + "&grant_type=client_credentials";
-    //
-    //                        restTemplate = new RestTemplateBuilder().build();
-    //                        ResponseEntity<String> tokenResponseEntity = restTemplate.exchange(getTokenUrl, HttpMethod.POST,
-    //                                request, String.class);
-    //
-    //                        JSONParser jsonParser = new JSONParser();
-    //                        JSONObject jsonObject = (JSONObject) jsonParser.parse(tokenResponseEntity.getBody());
-    //                        String accessToken = (String) jsonObject.get("access_token");
-    //
-    //                        String deleteUserUrl = "https://graph.facebook.com/" + user.getThirdPartyUserId() + "/permissions?access_token=" + accessToken;
-    //
-    //                        ResponseEntity<String> deleteUserResponseEntity = restTemplate.exchange(deleteUserUrl,
-    //                                HttpMethod.DELETE, request, String.class);
-    //                        break;
-    //                    default:
-    //                        break;
-    //                }
-    //            }
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            return CommonResponse.failWithMessage("써드파티 연동해제에 실패하였습니다.");
-    //        }
-    //
-    //        // User Entity에 leave() 메소드를 만들어서 이 내용을 메소드 하나로 퉁치게 만들자!
-    //        user.setUserName(null);
-    //        user.setPassword(null);
-    //        user.setThirdPartyUserId(null);
-    //        user.setEmail(null);
-    //        user.setLeaved(true);
-    //        user.setLeavedAt(LocalDateTime.now());
-    //        User leavedUser = userRepository.save(user);
-    //
-    //        //탈퇴 시 자식댓글이 없을 경우 댓글 모두 삭제(row)(정욱)
-    //        List<PickCastComment> pickCastCommentList = pickastCommentRepository.findAllByUserId(user.getId());
-    //        for (PickCastComment comment : pickCastCommentList) {
-    //
-    //            if (comment.getChildCommentCount() == 0) {
-    //                pickastCommentRepository.deleteById(comment.getId());
-    //            } else {
-    //                comment.setDeleted(true);
-    //            }
-    //
-    //            if (comment.getParentId() != null) {
-    //                PickCastComment parentComment = pickCastCommentRepository.getOne(comment.getParentId());
-    //                if (parentComment.getChildCommentCount() == 1 && parentComment.isDeleted()) {
-    //                    pickastCommentRepository.deleteById(parentComment.getId());
-    //                }
-    //            }
-    //        }
-    //    }
-
 }

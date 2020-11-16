@@ -14,7 +14,6 @@ public class UserApiController {
 
     private final UserService userService;
 
-    // 기존 회원가입 로직
     @PostMapping("/users")
     public ResponseEntity join(@RequestBody UserSaveRequestDto requestDto) {
         try {
@@ -24,11 +23,4 @@ public class UserApiController {
             return ResponseEntity.badRequest().build(); // todo: 예외처리
         }
     }
-
-    //    @DeleteMapping("/users/me") todo: uri 개선..하는게 낫지 않을까? /users 만해도 될 것 같다는 생각이 드는데...
-    //    public ResponseEntity leave() {
-    //        return ResponseEntity.ok(userService.);
-    //    }
-    //}
-
 }
