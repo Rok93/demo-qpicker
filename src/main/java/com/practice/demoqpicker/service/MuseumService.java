@@ -3,6 +3,7 @@ package com.practice.demoqpicker.service;
 import com.practice.demoqpicker.model.museum.Museum;
 import com.practice.demoqpicker.model.museum.MuseumRepository;
 import com.practice.demoqpicker.model.position.Position;
+import com.practice.demoqpicker.web.dto.MuseumResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,11 @@ public class MuseumService {
     private final MuseumRepository museumRepository;
 
     @Transactional(readOnly = true)
-    public List<Museum> findAllMuseumOrderByDistance(Position userLocation) {
+    public List<MuseumResponseDto> findAllMuseumOrderByDistance(Position userLocation) {
         return museumRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingDouble(museum -> calculateDistance(museum, userLocation))) // 거리 측정하는 방법
+                .map(MuseumResponseDto::new)
                 .collect(Collectors.toList());
     }
 

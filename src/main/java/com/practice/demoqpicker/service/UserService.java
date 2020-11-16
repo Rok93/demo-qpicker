@@ -4,6 +4,7 @@ import com.practice.demoqpicker.model.user.AuthType;
 import com.practice.demoqpicker.model.user.User;
 import com.practice.demoqpicker.model.user.UserRepository;
 import com.practice.demoqpicker.utils.BCryptPasswordEncoder;
+import com.practice.demoqpicker.web.dto.UserResponseDto;
 import com.practice.demoqpicker.web.dto.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User join(UserSaveRequestDto requestDto) {
+    public UserResponseDto join(UserSaveRequestDto requestDto) {
         validateUserName(requestDto);
         User user = createUser(requestDto);
 
@@ -41,7 +42,7 @@ public class UserService {
         savedUser.setToken(authToken);
         */
 
-        return savedUser;
+        return new UserResponseDto(savedUser);
     }
 
     private User createUser(UserSaveRequestDto requestDto) {

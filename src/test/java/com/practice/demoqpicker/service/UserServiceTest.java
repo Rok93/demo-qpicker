@@ -3,6 +3,7 @@ package com.practice.demoqpicker.service;
 import com.practice.demoqpicker.model.user.AuthType;
 import com.practice.demoqpicker.model.user.User;
 import com.practice.demoqpicker.model.user.UserRepository;
+import com.practice.demoqpicker.web.dto.UserResponseDto;
 import com.practice.demoqpicker.web.dto.UserSaveRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ class UserServiceTest {
                 .build();
 
         //when
-        User joinedUser = userService.join(userInfo);
+        UserResponseDto joinedUser = userService.join(userInfo);
 
         //then
         assertAll(
@@ -84,7 +85,7 @@ class UserServiceTest {
                 .build();
 
         //when
-        User joinedUser = userService.join(userInfo);
+        UserResponseDto joinedUser = userService.join(userInfo);
 
         //then
         assertAll(
@@ -149,7 +150,7 @@ class UserServiceTest {
                 .build();
 
         //when
-        User joinedUser = userService.join(userInfo);
+        UserResponseDto joinedUser = userService.join(userInfo);
 
         //then
         assertAll(

@@ -3,6 +3,7 @@ package com.practice.demoqpicker.service;
 import com.practice.demoqpicker.model.museum.Museum;
 import com.practice.demoqpicker.model.museum.MuseumRepository;
 import com.practice.demoqpicker.model.position.Position;
+import com.practice.demoqpicker.web.dto.MuseumResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,32 +32,24 @@ class MuseumServiceTest {
     @Test
     void testFindAllMuseumOrderByDistance() {
         //given
-        Museum museumA = museumRepository.save(Museum.builder()
-                .name("museumA")
-                .latitude(1.0)
-                .longitude(1.0)
-                .build());
+        Museum museumA = museumRepository.save(Museum.builder().name("museumA").latitude(1.0).longitude(1.0).build());
 
-        Museum museumB = museumRepository.save(Museum.builder()
-                .name("museumB")
-                .latitude(2.0)
-                .longitude(2.0)
-                .build());
+        Museum museumB = museumRepository.save(Museum.builder().name("museumB").latitude(2.0).longitude(2.0).build());
 
         Position positionNearByMuseumA = new Position(0.0, 0.0);
         Position positionNearByMuseumB = new Position(2.0, 2.0);
 
         //when
-        List<Museum> resultsNearByMuseumA = museumService.findAllMuseumOrderByDistance(positionNearByMuseumA);
-        List<Museum> resultsNearByMuseumB = museumService.findAllMuseumOrderByDistance(positionNearByMuseumB);
+        List<MuseumResponseDto> resultsNearByMuseumA =
+                museumService.findAllMuseumOrderByDistance(positionNearByMuseumA);
+        List<MuseumResponseDto> resultsNearByMuseumB =
+                museumService.findAllMuseumOrderByDistance(positionNearByMuseumB);
 
         //then
-        assertThat(resultsNearByMuseumA)
-                .usingFieldByFieldElementComparator()
-                .containsExactly(museumA, museumB);
+        assertThat(resultsNearByMuseumA).usingFieldByFieldElementComparator()
+                .containsExactly(new MuseumResponseDto(museumA), new MuseumResponseDto(museumB));
 
-        assertThat(resultsNearByMuseumB)
-                .usingFieldByFieldElementComparator()
-                .containsExactly(museumB, museumA);
+        assertThat(resultsNearByMuseumB).usingFieldByFieldElementComparator()
+                .containsExactly(new MuseumResponseDto(museumB), new MuseumResponseDto(museumA));
     }
 }
