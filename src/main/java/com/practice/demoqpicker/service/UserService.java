@@ -20,8 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User join(UserSaveRequestDto requestDto) { // 회원가입 프로세스!
-        validateUserName(requestDto); //todo: 여기서 더 확장하면! 원하는 기능별로 예외처리를 분리할 수 있지 않을까?
+    public User join(UserSaveRequestDto requestDto) {
+        validateUserName(requestDto);
         User user = createUser(requestDto);
 
         /* (기존코드) 해당 코드는 countryIsoCode가 어떤 부분에서 초기화 되었는지 알 수X
@@ -98,21 +98,21 @@ public class UserService {
         return userRepository.findByUid(uid).isPresent();
     }
 
-    private String enrollEmail(UserSaveRequestDto requestDto) {
-        return isAlreadyVerifiedEmail(requestDto.getEmail()) ? null : requestDto.getEmail();
-    }
-
     private void validateEmail(UserSaveRequestDto requestDto) {
         if (isAlreadyVerifiedEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 인증에 사용되었던 이메일입니다.");
         }
     }
 
-    private boolean isAlreadyVerifiedEmail(String email) { // todo: isPresent()를 없애는 방법 없을까? )
+    private String enrollEmail(UserSaveRequestDto requestDto) {
+        return isAlreadyVerifiedEmail(requestDto.getEmail()) ? null : requestDto.getEmail();
+    }
+
+    private boolean isAlreadyVerifiedEmail(String email) {
         return userRepository.findByEmailAndEmailVerifiedIsTrue(email).isPresent();
     }
 
-    private void validateUserName(UserSaveRequestDto requestDto) { // todo:  (+ Controller에서 try catch문으로 예외처리해주기!)
+    private void validateUserName(UserSaveRequestDto requestDto) {
         List<User> findUsers = userRepository.findAllByUserNameOrderByLeavedAtDesc(requestDto.getUserName());
 
         if (!findUsers.isEmpty()) {
@@ -123,18 +123,18 @@ public class UserService {
         }
     }
 
+    private void validateDuplicateUserName(User findUser) {
+        if (!findUser.isLeaved()) {
+            throw new IllegalArgumentException("동일한 사용자 이름이 존재합니다.");
+        }
+    }
+
     private void validateRejoinPermitDuration(User findUser) {
         LocalDateTime userLeavedAt = findUser.getLeavedAt();
         LocalDateTime rejoinPermitDate = userLeavedAt.plusDays(User.REJOIN_DURATION);
 
-        if (LocalDateTime.now().isAfter(rejoinPermitDate)) {
+        if (LocalDateTime.now().isBefore(rejoinPermitDate)) {
             throw new IllegalArgumentException("탈퇴 후 30일이 지나야 재가입할 수 있습니다.");
-        }
-    }
-
-    private void validateDuplicateUserName(User findUser) {
-        if (!findUser.isLeaved()) {
-            throw new IllegalArgumentException("동일한 사용자 이름이 존재합니다.");
         }
     }
 }

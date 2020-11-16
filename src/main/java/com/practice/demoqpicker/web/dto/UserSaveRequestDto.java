@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserSaveRequestDto {
     private String address;
-
     private AuthType authType;
     private String cellphone;
     private LocalDateTime createAt;
@@ -22,18 +21,14 @@ public class UserSaveRequestDto {
     private String name;
     private String password;
     private String profileImage;
-
     private String uid;
-
     private String userName;
-    private Long lastAccessed; // todo: 풀 네임 모르겠음 (마지막 접근 국가 식벽자)
+    private Long lastAccessed;
     private LocalDateTime lastAccessedAt;
-
     private String memo;
     private String platform;
     private LocalDateTime updatedAt;
     private LocalDateTime lastAccessAt;
-
     private String thirdPartyAccessToken;
     private String thirdPartyUserId;
     private String authKey;
@@ -42,7 +37,7 @@ public class UserSaveRequestDto {
 
     @Builder
     public UserSaveRequestDto(AuthType authType, String platform, Long roleId, String uid, String name, String email,
-            String userName, String password) {
+            String userName, String password, String thirdPartyAccessToken, String thirdPartyUserId) {
         this.authType = authType;
         this.platform = platform;
         this.roleId = roleId;
@@ -51,6 +46,8 @@ public class UserSaveRequestDto {
         this.email = email;
         this.userName = userName;
         this.password = password;
+        this.thirdPartyAccessToken = thirdPartyAccessToken;
+        this.thirdPartyUserId = thirdPartyUserId;
     }
 }
 

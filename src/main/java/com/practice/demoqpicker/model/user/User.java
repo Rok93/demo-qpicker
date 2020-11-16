@@ -19,41 +19,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String address;
-
     @Enumerated(EnumType.STRING)
     private AuthType authType;
     private String cellphone;
-    private LocalDateTime createAt;
+    private LocalDateTime createAt = LocalDateTime.now();
     private String email;
     private String message;
     private String name;
     private String password;
     private String profileImage;
-
     private String uid;
-
-    @Column(unique = true)
     private String userName;
-    private Long lastAccessed; // todo: 풀 네임 모르겠음 (마지막 접근 국가 식벽자)
+    private Long lastAccessed;
     private LocalDateTime lastAccessedAt;
-
-    private boolean leaved = false; // 탈퇴 여부
-    private LocalDateTime leavedAt; // 탈퇴 시각
-
+    private boolean leaved = false;
+    private LocalDateTime leavedAt;
     @Column(columnDefinition = "TEXT")
-    private String memo; // 메모
-    private String platform; // 마지막 로그인 플랫폼 구분 ...?
-    private LocalDateTime updatedAt; // 마지막 수정 시간
-    private LocalDateTime lastAccessAt; // 마지막 접근 시간
-
+    private String memo;
+    private String platform;
+    private LocalDateTime updatedAt;
+    private LocalDateTime lastAccessAt;
     @Column(columnDefinition = "TEXT")
-    private String thirdPartyAccessToken; // thirdparty로 가입했을 경우 토큰 (페이스북, 카카오톡)
-    private String thirdPartyUserId; // thirdparty로 가입했을 경우 식별자
+    private String thirdPartyAccessToken;
+    private String thirdPartyUserId;
     private String authKey;
-    private Long roleId; // 권한 (권한은 BIGINT 타입으로 주어져있는데, 음... 이 의미를 잘 모르겠음)
-    private boolean cellPhoneVerified = false; // 휴대폰 인증 여부
-    private boolean emailVerified = false; // 이메일 인증 여부
-    private String deviceToken; // FCM 디바이스 토큰
+    private Long roleId;
+    private boolean cellPhoneVerified = false;
+    private boolean emailVerified = false;
+    private String deviceToken;
 
     @Builder
     public User(AuthType authType, String platform, Long roleId, String uid, String name, String email, String userName,

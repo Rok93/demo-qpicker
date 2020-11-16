@@ -20,7 +20,7 @@ public class UserApiController {
             return ResponseEntity.ok(userService.join(requestDto));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build(); // todo: 예외처리
+            return ResponseEntity.badRequest().build();
         }
     }
 }
