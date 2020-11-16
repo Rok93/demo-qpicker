@@ -1,4 +1,4 @@
-package com.practice.demoqpicker.web.dto;
+package com.practice.demoqpicker.model.position;
 
 import lombok.Getter;
 import lombok.Setter;

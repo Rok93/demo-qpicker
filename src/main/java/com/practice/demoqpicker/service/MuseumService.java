@@ -2,7 +2,7 @@ package com.practice.demoqpicker.service;
 
 import com.practice.demoqpicker.model.museum.Museum;
 import com.practice.demoqpicker.model.museum.MuseumRepository;
-import com.practice.demoqpicker.web.dto.Position;
+import com.practice.demoqpicker.model.position.Position;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,7 +2,7 @@ package com.practice.demoqpicker.service;
 
 import com.practice.demoqpicker.model.museum.Museum;
 import com.practice.demoqpicker.model.museum.MuseumRepository;
-import com.practice.demoqpicker.web.dto.Position;
+import com.practice.demoqpicker.model.position.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
