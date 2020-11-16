@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findAllByUserName(String userName);
+    List<User> findAllByUserNameOrderByLeavedAtDesc(String userName);
 
     Optional<User> findByEmailAndEmailVerifiedIsTrue(String email);
 

@@ -1,6 +1,6 @@
 # 피플미 기업과제 
 
-> 요구사항 
+## 요구사항 
 
 1. 회원탈퇴 후 재가입 가능 기간 로직 추가하기 
     * 추후에 기간을 두고 재가입할 수 있도록 로직변경이 필요
@@ -10,6 +10,26 @@
     * SQL Query
     * Java SpringBoot 메소드
     * (알고리즘 구현 방법 or 풀이 방법을 함께 포함해서 전달)
+    
+## 사고과정 및 풀이과정 
+1. 재가입 가능 기간 로직 추가하기 
+```
+(기존 탈퇴 기능은 수정할 필요가 없다고 판단하여 제외하였습니다.) 
+회원 탈퇴를 하면, userName, password, thirdPartUserId, email 정보를 비우고(=null), 
+leaved 를 true로 변경하고 탈퇴시각(=leavedAt)을 현재 시간으로 업데이트하고있습니다. 
+
+주어진 조건에 따라서 회원 탈퇴 후, 30일 동안은 재가입을 방지하고 30일 이후에 회원 가입을 가능하게 설정해야 한다고 생각했습니다. 
+날짜와 시간 API인 LocaldateTime의 기능을 통해서 '회원 탈퇴 이후 30일이 지났는지' 판단할 수 있었습니다. 
+(탈퇴일로부터 30일 이후의 날짜를 구하고 현재 날짜가 앞의 날짜 이후인지 확인하여 진위여부를 파악했습니다) 
+ 
+회원가입 기능 UserApiController[join]을 통해서 UserService[join] 메소드가 실행됩니다. 
+Controller단을 통해서 회원가입 정보(UserSaveRequestDto)를 받아오고 Service단의 join 메소드로 전달하게 됩니다. 
+(Service단의)join 메소드가 처음 실행되면 validateUserName()을 통해서 userName이 유효한지를 판단하고, 
+이 유효성을 판단하는 메소드는 userName이 DB의 User table에 이미 존재하는 경우에 2가지 유효성을 검증합니다. 
+(1). isLeaved가 false인 경우는 중복되는 유저가 존재하는 것이므로 예외를 던진다. 
+(2) isLeaved가 true인 경우 탈퇴일 이후 30일이 지났는지 확인하여 지나지 않았다면 예외를 던진다. 
+
+```
 
 ```
 // 2. 클라이언트에서 전달받은 latitude 와 longitude를 이용하여
