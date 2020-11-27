@@ -9,5 +9,4 @@ public class DemoQpickerApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoQpickerApplication.class, args);
     }
-
 }
